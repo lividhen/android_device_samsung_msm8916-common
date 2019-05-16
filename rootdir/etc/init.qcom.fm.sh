@@ -26,9 +26,9 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-setprop hw.fm.init 0
+setprop vendor.hw.fm.init 0
 
-mode=`getprop hw.fm.mode`
+mode=`getprop vendor.hw.fm.mode`
 version=199217
 
 LOG_TAG="qcom-fm"
@@ -60,17 +60,17 @@ case $mode in
   "normal")
         logi "inserting the radio transport module"
         echo 1 > /sys/module/radio_iris_transport/parameters/fmsmd_set
-        /system/bin/fm_qsoc_patches $version 0
+        /vendor/bin/fm_qsoc_patches $version 0
      ;;
   "wa_enable")
-   /system/bin/fm_qsoc_patches $version 1
+   /vendor/bin/fm_qsoc_patches $version 1
      ;;
   "wa_disable")
-   /system/bin/fm_qsoc_patches $version 2
+   /vendor/bin/fm_qsoc_patches $version 2
      ;;
    *)
     logi "Shell: Default case"
-    /system/bin/fm_qsoc_patches $version 0
+    /vendor/bin/fm_qsoc_patches $version 0
     ;;
 esac
 
@@ -85,6 +85,6 @@ case $exit_code_fm_qsoc_patches in
    ;;
 esac
 
-setprop hw.fm.init 1
+setprop vendor.hw.fm.init 1
 
 exit 0

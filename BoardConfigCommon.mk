@@ -167,7 +167,7 @@ LZMA_RAMDISK_TARGETS := recovery
 TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
 TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/overclocked
+TARGET_KERNEL_SOURCE := kernel/samsung/msm8916
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -194,8 +194,8 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 # Legacy BLOB Support
 TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
     /system/bin/mediaserver=22 \
-    /system/bin/mm-qcamera-daemon=22 \
-    /system/vendor/bin/hw/rild=27
+    /vendor/bin/mm-qcamera-daemon=22 \
+    /vendor/bin/hw/rild=27
 
 # Power
 TARGET_HAS_LEGACY_POWER_STATS := true
@@ -249,22 +249,28 @@ ifeq ($(RECOVERY_VARIANT),twrp)
 endif
 
 # SELinux
-include device/qcom/sepolicy/sepolicy.mk
+include device/qcom/sepolicy-legacy/sepolicy.mk
+
+BOARD_SEPOLICY_DIRS += \
+    $(PLATFORM_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
-    /system/lib/libmmjpeg_interface.so|libboringssl-compat.so \
-    /system/lib/libsec-ril.so|libshim_secril.so \
-    /system/lib/libsec-ril-dsds.so|libshim_secril.so \
-    /system/vendor/lib/hw/camera.vendor.msm8916.so|libcamera_shim.so \
-    /system/vendor/lib/libizat_core.so|libshim_gps.so \
-    /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so
+    /vendor/lib/libmmjpeg_interface.so|libboringssl-compat.so \
+    /vendor/lib/libsec-ril.so|libshim_secril.so \
+    /vendor/lib/libsec-ril-dsds.so|libshim_secril.so \
+    /vendor/lib/hw/camera.vendor.msm8916.so|libcamera_shim.so \
+    /vendor/lib/libizat_core.so|libshim_gps.so \
+    /vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so
 
 # Snapdragon LLVM
 TARGET_USE_SDCLANG := true
 
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true
+
+# Vendor
+PRODUCT_VENDOR_MOVE_ENABLED := true
 
 # Vold
 BOARD_VOLD_DISC_HAS_MULTIPLE_MAJORS := true
@@ -279,6 +285,7 @@ BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_qcwcn
 BOARD_WLAN_DEVICE := qcwcn
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_qcwcn
+TARGET_DISABLE_WCNSS_CONFIG_COPY := true
 TARGET_USES_QCOM_WCNSS_QMI := true
 TARGET_USES_WCNSS_CTRL := true
 WIFI_DRIVER_FW_PATH_AP := "ap"
