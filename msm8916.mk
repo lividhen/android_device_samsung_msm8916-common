@@ -20,7 +20,7 @@ $(call inherit-product-if-exists, device/samsung/qcom-common/qcom-common.mk)
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
-	$(LOCAL_PATH)/overlay-lineage
+    $(LOCAL_PATH)/overlay-lineage
 
 # Assistant
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -425,8 +425,8 @@ PRODUCT_PACKAGES += \
     sensors.msm8916
 
 # Thermal
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/configs/thermal-engine.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/thermal-engine.conf
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/thermal-engine.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/thermal-engine.conf
 
 # Time services
 PRODUCT_PROPERTY_OVERRIDES += \
