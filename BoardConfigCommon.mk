@@ -136,8 +136,6 @@ AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
 TARGET_NO_RPC := true
 USE_DEVICE_SPECIFIC_GPS := true
 
-# Healthd
-BOARD_HAL_STATIC_LIBRARIES := libhealthd.lineage
 
 # HIDL
 DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
@@ -170,7 +168,7 @@ LZMA_RAMDISK_TARGETS := recovery
 TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
 TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/msm8916-oc
+TARGET_KERNEL_SOURCE := kernel/samsung/msm8916
 
 # Lights
 #TARGET_PROVIDES_LIBLIGHT := true
