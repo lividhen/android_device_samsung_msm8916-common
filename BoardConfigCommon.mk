@@ -170,7 +170,7 @@ LZMA_RAMDISK_TARGETS := recovery
 TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
 TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/msm8916-oc
+TARGET_KERNEL_SOURCE := kernel/samsung/msm8916
 
 # Lights
 #TARGET_PROVIDES_LIBLIGHT := true
