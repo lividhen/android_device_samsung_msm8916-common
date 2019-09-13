@@ -1,3 +1,5 @@
-r_dir_file(rild, app_efs_file)
-r_dir_file(rild, imei_efs_file)
+allow rild app_efs_file:dir search;
+allow rild app_efs_file:file r_file_perms;
+allow rild imei_efs_file:dir search;
+allow rild imei_efs_file:file r_file_perms;
 allow rild proc_net:file rw_file_perms;

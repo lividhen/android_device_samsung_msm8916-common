@@ -17,6 +17,11 @@
 # Inherit from common
 $(call inherit-product-if-exists, device/samsung/qcom-common/qcom-common.mk)
 
+# Soong
+PRODUCT_SOONG_NAMESPACES += \
+    $(COMMON_PATH)
+
+    
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay
@@ -30,6 +35,7 @@ PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
     android.hardware.audio@2.0-service \
     android.hardware.audio.effect@2.0-impl \
+    android.hardware.broadcastradio@1.0-impl \
     android.hardware.soundtrigger@2.0-impl \
     audio.a2dp.default \
     audio.primary.msm8916 \
@@ -91,8 +97,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.bluetooth.hfp.ver=1.7 \
     ro.bluetooth.sap=true \
     ro.qualcomm.bt.hci_transport=smd \
-    vendor.qcom.bluetooth.soc=pronto \
-    vendor.bluetooth.soc=pronto
+    vendor.qcom.bluetooth.soc=pronto
 
 # BoringSSL Hacks
 PRODUCT_PACKAGES += \
@@ -109,8 +114,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service \
+    android.hardware.camera.provider@2.4-impl-legacy \
+    camera.device@1.0-impl-legacy \
     libcamera_shim \
     libmm-qcamera \
     camera.msm8916
@@ -155,9 +160,9 @@ PRODUCT_PACKAGES += \
     libtinyxml2 \
     memtrack.msm8916
 
-#PRODUCT_PACKAGES += \
- #   AdvancedDisplay \
-  #  SamsungDoze
+PRODUCT_PACKAGES += \
+    AdvancedDisplay \
+    SamsungDoze
 
 # DRM
 PRODUCT_PACKAGES += \
@@ -169,13 +174,6 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes \
     libebtc
-
-# FM
-PRODUCT_PACKAGES += \
-    FM2 \
-    FMRecord \
-    libqcomfm_jni \
-    qcom.fmradio
 
 # FM
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -203,7 +201,6 @@ PRODUCT_COPY_FILES += \
 # GPS
 PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-impl \
-    android.hardware.gnss@1.0-service \
     com.android.location.provider \
     com.android.location.provider.xml \
     gps.msm8916 \
@@ -220,10 +217,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_VENDOR_KERNEL_HEADERS := \
     hardware/qcom/msm8916/kernel-headers
 
-# Healthd
-PRODUCT_PACKAGES += \
-    android.hardware.health@2.0-impl \
-    android.hardware.health@2.0-service
 
 # Keylayout
 PRODUCT_COPY_FILES += \
@@ -290,17 +283,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     media.stagefright.enable-player=true \
     media.stagefright.enable-qcp=true \
     media.stagefright.enable-scan=true \
+    media.stagefright.legacyencoder=true \
+    media.stagefright.less-secure=true \
     media.stagefright.use-awesome=true \
     media.swhevccodectype=0 \
     mm.enable.qcom_parser=3183219 \
     mm.enable.smoothstreaming=true \
     mmp.enable.3g2=true
-
-ifeq ($(TARGET_HAS_LEGACY_CAMERA_HAL1),true)
-PRODUCT_PROPERTY_OVERRIDES += \
-    media.stagefright.legacyencoder=true \
-    media.stagefright.less-secure=true
-endif
 
 # Memory optimizations
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -359,12 +348,11 @@ PRODUCT_COPY_FILES += \
 
 # Power HAL
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.2-service-qti
+    android.hardware.power@1.1-service-qti
 
 # Radio
 PRODUCT_PACKAGES += \
     librmnetctl \
-    libsecnativefeature \
     libshim_secril \
     libxml2 \
     macloader \
@@ -442,7 +430,7 @@ PRODUCT_PACKAGES += \
 
 # Thermal
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/thermal-engine.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine.conf
+    $(LOCAL_PATH)/configs/thermal-engine.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/thermal-engine.conf
 
 # Time services
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -456,15 +444,19 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.build.security_patch=2017-09-01
 
-# Vibrator
-PRODUCT_PACKAGES += \
-    android.hardware.vibrator@1.0-impl
 
 # Video encoding
 PRODUCT_PROPERTY_OVERRIDES += \
     vidc.enc.narrow.searchrange=1
 
-
+# Wifi configuration files
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/wifi/cred.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/cred.conf \
+    $(LOCAL_PATH)/configs/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
+    $(LOCAL_PATH)/configs/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
+    $(LOCAL_PATH)/configs/wifi/WCNSS_cfg.dat:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_cfg.dat \
+    $(LOCAL_PATH)/configs/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
+    $(LOCAL_PATH)/configs/wifi/WCNSS_qcom_wlan_nv.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
 
 # WiDi
 PRODUCT_PACKAGES += \
@@ -485,7 +477,7 @@ PRODUCT_PACKAGES += \
     libwpa_client \
     libwcnss_qmi \
     wcnss_service \
-    wificond 
+    wificond \
 
 # ZRAM - Size in MB
 PRODUCT_PROPERTY_OVERRIDES += \
