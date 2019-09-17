@@ -256,7 +256,7 @@ endif
 #include device/qcom/sepolicy-legacy/sepolicy.mk
 
 #BOARD_SEPOLICY_DIRS += \
- #   $(PLATFORM_PATH)/sepolicy
+    $(PLATFORM_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \

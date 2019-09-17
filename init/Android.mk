@@ -5,6 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_C_INCLUDES := \
+        system/core/base/include \
 	system/core/init \
 	external/selinux/libselinux/include
 

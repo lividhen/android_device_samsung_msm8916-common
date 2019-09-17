@@ -113,12 +113,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.camcorder.disablemeta=true
 
 # Camera
-PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl-legacy \
-    camera.device@1.0-impl-legacy \
-    libcamera_shim \
-    libmm-qcamera \
-    camera.msm8916
+#PRODUCT_PACKAGES += \
+  android.hardware.camera.provider@2.4-impl-legacy \
+  camera.device@1.0-impl-legacy \
+  
+  #PRODUCT_PACKAGES += \
+   libcamera_shim \
+   libmm-qcamera \
+   camera.msm8916
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/camera/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml
@@ -161,7 +163,6 @@ PRODUCT_PACKAGES += \
     memtrack.msm8916
 
 PRODUCT_PACKAGES += \
-    AdvancedDisplay \
     SamsungDoze
 
 # DRM
