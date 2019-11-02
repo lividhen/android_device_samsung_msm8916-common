@@ -19,8 +19,7 @@ $(call inherit-product-if-exists, device/samsung/qcom-common/qcom-common.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay \
-    $(LOCAL_PATH)/overlay-lineage
+    $(LOCAL_PATH)/overlay
 
 # Assistant
 PRODUCT_PROPERTY_OVERRIDES += \
