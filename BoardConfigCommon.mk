@@ -39,12 +39,24 @@ TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Audio
-AUDIO_CONFIG_PATH := hardware/qcom/audio-caf/msm8916/configs
+AUDIO_CONFIG_PATH := hardware/qcom-caf/msm8916/audio/configs
+AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
+AUDIO_FEATURE_ENABLED_FLUENCE := true
+AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
+AUDIO_FEATURE_ENABLED_KPI_OPTIMIZE := false
+AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
+AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
+AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
 BOARD_USES_ALSA_AUDIO := true
 BOARD_USES_GENERIC_AUDIO := true
 TARGET_USES_QCOM_MM_AUDIO := true
-USE_CUSTOM_AUDIO_POLICY := 0
+USE_CUSTOM_AUDIO_POLICY := 1
 USE_XML_AUDIO_POLICY_CONF := 1
+TARGET_AUDIOHAL_VARIANT := samsung
+
+
+# Build config
+BUILD_BROKEN_DUP_RULES := true
 
 # Mixer paths
 ifneq ($(USE_CUSTOM_MIXER_PATHS), true)
@@ -68,10 +80,12 @@ endif
 TARGET_USES_64_BIT_BINDER := true
 
 # Bluetooth
+
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
 QCOM_BT_USE_BTNV := true
 BLUETOOTH_HCI_USE_MCT := true
+
 
 # Bootanimation
 TARGET_BOOTANIMATION_HALF_RES := true
@@ -82,11 +96,12 @@ TARGET_BOOTLOADER_BOARD_NAME := MSM8916
 
 # Camera
 BOARD_GLOBAL_CFLAGS += -DMETADATA_CAMERA_SOURCE
-TARGET_HAS_LEGACY_CAMERA_HAL1 := true
+TARGET_HAS_LEGACY_CAMERA_HAL1 ?= false
 TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
 TARGET_PROVIDES_CAMERA_HAL := true
 TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USES_QTI_CAMERA_DEVICE := true
+TARGET_USES_NON_TREBLE_CAMERA := true
 USE_DEVICE_SPECIFIC_CAMERA := true
 
 # Charger
@@ -94,6 +109,11 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_SHOW_PERCENTAGE := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 
+# CMHW
+JAVA_SOURCE_OVERLAYS += \
+	org.lineageos.hardware|hardware/samsung/lineagehw|**/*.java \
+	org.lineageos.hardware|$(VENDOR_PATH)/lineagehw|**/*.java
+	
 # Display
 MAX_EGL_CACHE_KEY_SIZE := 12*1024
 MAX_EGL_CACHE_SIZE := 2048*1024
@@ -128,23 +148,16 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
 # FM
-AUDIO_FEATURE_ENABLED_FM := true
-BOARD_HAVE_QCOM_FM := true
-AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
+#AUDIO_FEATURE_ENABLED_FM := true
+#BOARD_HAVE_QCOM_FM := true
+#AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
 
 # GPS
 TARGET_NO_RPC := true
 USE_DEVICE_SPECIFIC_GPS := true
 
-# Healthd
-#BOARD_HAL_STATIC_LIBRARIES := libhealthd.lineage
-
 # HIDL
 DEVICE_MANIFEST_FILE := $(PLATFORM_PATH)/manifest.xml
-
-# Init
-TARGET_INIT_VENDOR_LIB := libinit_msm8916
-TARGET_RECOVERY_DEVICE_MODULES := $(PLATFORM_PATH)/init
 
 # Kernel
 BOARD_KERNEL_CMDLINE += \
@@ -171,10 +184,16 @@ TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
 TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/msm8916
-TARGET_KERNEL_USE_CLANG := true
+#TARGET_KERNEL_USE_CLANG := true
+
+# Kernel - Toolchain
+ifneq ($(wildcard $(BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-7.2/bin),)
+    KERNEL_TOOLCHAIN := $(BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-7.2/bin
+    KERNEL_TOOLCHAIN_PREFIX := arm-eabi-
+endif
 
 # Lights
-#TARGET_PROVIDES_LIBLIGHT := true
+TARGET_PROVIDES_LIBLIGHT := true
 
 # Malloc implementation
 MALLOC_SVELTE := true
@@ -253,13 +272,15 @@ ifeq ($(RECOVERY_VARIANT),twrp)
 endif
 
 # SELinux
-#include device/qcom/sepolicy-legacy/sepolicy.mk
+ include device/qcom/sepolicy-legacy/sepolicy.mk
 
-#BOARD_SEPOLICY_DIRS += \
-    $(PLATFORM_PATH)/sepolicy
+ #BOARD_SEPOLICY_DIRS += \
+ #    $(PLATFORM_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
+    /system/lib/libui.so|libui_shim.so \
+    /system/lib64/libui.so|libui_shim.so \
     /vendor/lib/libmmjpeg_interface.so|libboringssl-compat.so \
     /vendor/lib/libsec-ril.so|libshim_secril.so \
     /vendor/lib/libsec-ril-dsds.so|libshim_secril.so \
@@ -268,7 +289,7 @@ TARGET_LD_SHIM_LIBS := \
     /vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so
 
 # Snapdragon LLVM
-#TARGET_USE_SDCLANG := true
+TARGET_USE_SDCLANG := true
 
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true
@@ -290,9 +311,10 @@ BOARD_WLAN_DEVICE := qcwcn
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_qcwcn
 TARGET_DISABLE_WCNSS_CONFIG_COPY := true
-TARGET_USES_QCOM_WCNSS_QMI := false
+TARGET_USES_QCOM_WCNSS_QMI := true
 TARGET_USES_WCNSS_CTRL := true
 WIFI_DRIVER_FW_PATH_AP := "ap"
 WIFI_DRIVER_FW_PATH_STA := "sta"
+WIFI_HIDL_FEATURE_DISABLE_AP_MAC_RANDOMIZATION := true
 WLAN_CHIPSET := pronto
 WPA_SUPPLICANT_VERSION := VER_0_8_X
