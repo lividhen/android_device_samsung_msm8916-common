@@ -28,16 +28,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@2.0-impl \
+    android.hardware.audio@4.0-impl \
     android.hardware.audio@2.0-service \
-    android.hardware.audio.effect@2.0-impl \
-    android.hardware.audio@5.0 \
-    android.hardware.audio@5.0-impl \
-    android.hardware.audio.common@5.0 \
-    android.hardware.audio.common@5.0-util \
-    android.hardware.audio.effect@2.0-impl \
-    android.hardware.audio.effect@5.0 \
-    android.hardware.audio.effect@5.0-impl \
+    android.hardware.audio.effect@4.0-impl \
     android.hardware.broadcastradio@1.0-impl \
     android.hardware.soundtrigger@2.0-impl \
     audio.a2dp.default \
@@ -57,11 +50,10 @@ PRODUCT_PACKAGES += \
     libtinycompress
 
 # Audio configuration file
-AUDIO_CONFIG_PATH := hardware/qcom-caf/msm8916/audio/configs
 PRODUCT_COPY_FILES += \
-    $(AUDIO_CONFIG_PATH)/msm8916_32/audio_output_policy.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_output_policy.conf \
-    $(AUDIO_CONFIG_PATH)/msm8916_32/audio_policy.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_policy.conf \
-    $(AUDIO_CONFIG_PATH)/msm8916_32/audio_effects.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_effects.conf
+    $(LOCAL_PATH)/configs/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_output_policy.conf \
+    $(LOCAL_PATH)/configs/audio/audio_policy.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_policy.conf \
+    $(LOCAL_PATH)/configs/audio/audio_effects.conf:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_effects.conf
 
 # Audio encoders
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -122,8 +114,8 @@ PRODUCT_PACKAGES += \
     libmm-qcamera \
     camera.msm8916
 
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/configs/camera/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/camera/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml
 
 # Connectivity Engine
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -164,7 +156,10 @@ PRODUCT_PACKAGES += \
     memtrack.msm8916
 
 
-
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    ro.surface_flinger.force_hwc_copy_for_virtual_displays=true \
+    ro.surface_flinger.max_frame_buffer_acquired_buffers=3
+    
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
@@ -176,6 +171,9 @@ PRODUCT_PACKAGES += \
     ebtables \
     ethertypes \
     libebtc
+
+# Exclude AudioFX
+TARGET_EXCLUDES_AUDIOFX := true
 
 # FM
 PRODUCT_PACKAGES += \
@@ -276,12 +274,12 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_video_le.xml
 
 # Media
-PRODUCT_PACKAGES += \
-    libextmedia_jni \
-    libdashplayer \
-    libdivxdrmdecrypt \
-    libdrmclearkeyplugin \
-    libstagefrighthw
+#PRODUCT_PACKAGES += \
+#    libextmedia_jni \
+#    libdashplayer \
+#    libdivxdrmdecrypt \
+#    libdrmclearkeyplugin \
+#    
 
 # Media - OpenMAX
 PRODUCT_PACKAGES += \
@@ -297,7 +295,8 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libOmxVidcCommon \
     libOmxVidEnc \
-    libOmxVdpp
+    libOmxVdpp \
+    libstagefrighthw
 
 # Media
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -312,17 +311,20 @@ PRODUCT_PROPERTY_OVERRIDES += \
     media.swhevccodectype=0 \
     mm.enable.qcom_parser=3183219 \
     mm.enable.smoothstreaming=true \
-    mmp.enable.3g2=true
+    mmp.enable.3g2=true \
+    debug.stagefright.omx_default_rank.sw-audio=1 \
+    debug.stagefright.omx_default_rank=0 \
+    drm.service.enabled=1 \
 
-#ifeq ($(TARGET_HAS_LEGACY_CAMERA_HAL1),true)
-#PRODUCT_PROPERTY_OVERRIDES += \
-#    media.stagefright.legacyencoder=true \
-#    media.stagefright.less-secure=true
-#endif
+ifeq ($(TARGET_HAS_LEGACY_CAMERA_HAL1),true)
+PRODUCT_PROPERTY_OVERRIDES += \
+    media.stagefright.legacyencoder=true \
+    media.stagefright.less-secure=true
+endif
 
 # Memory optimizations
-#PRODUCT_PROPERTY_OVERRIDES += \
-#   ro.vendor.qti.sys.fw.bservice_enable=true
+PRODUCT_PROPERTY_OVERRIDES += \
+   ro.vendor.qti.sys.fw.bservice_enable=true
 
 # Misc
 PRODUCT_PACKAGES += \
@@ -396,7 +398,7 @@ PRODUCT_COPY_FILES += \
 # Power HAL
 PRODUCT_PACKAGES += \
     android.hardware.power@1.0-impl \
-    android.hardware.power@1.0-service \
+    android.hardware.power@1.0-service.8916 \
     power.qcom
 
 # Radio
@@ -442,8 +444,8 @@ PRODUCT_ENFORCE_RRO_TARGETS := \
 
 # Seccomp
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
-    $(LOCAL_PATH)/seccomp/mediaextractor-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
+    $(LOCAL_PATH)/seccomp/mediacodec-seccomp.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy
+   
 
 # RIL
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -527,7 +529,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Wifi
 PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service \
+    android.hardware.wifi@1.0-service-legacy \
     hostapd \
     hostapd_cli \
     iwconfig \

@@ -35,11 +35,8 @@ TARGET_CPU_SMP := true
 TARGET_CPU_VARIANT := cortex-a53
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
 
-# ANT+
-BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
 
 # Audio
-AUDIO_CONFIG_PATH := hardware/qcom-caf/msm8916/audio/configs
 AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
 AUDIO_FEATURE_ENABLED_FLUENCE := true
 AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
@@ -47,6 +44,7 @@ AUDIO_FEATURE_ENABLED_KPI_OPTIMIZE := false
 AUDIO_FEATURE_ENABLED_MULTI_VOICE_SESSIONS := true
 AUDIO_FEATURE_ENABLED_NEW_SAMPLE_RATE := true
 AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
+AUDIO_FEATURE_ENABLED_EXTN_FORMATS := false
 BOARD_USES_ALSA_AUDIO := true
 BOARD_USES_GENERIC_AUDIO := true
 TARGET_USES_QCOM_MM_AUDIO := true
@@ -58,17 +56,12 @@ TARGET_AUDIOHAL_VARIANT := samsung
 # Build config
 BUILD_BROKEN_DUP_RULES := true
 
-# Mixer paths
-ifneq ($(USE_CUSTOM_MIXER_PATHS), true)
-PRODUCT_COPY_FILES += \
-    $(PLATFORM_PATH)/configs/audio/mixer_paths.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/mixer_paths.xml
-endif
 
 #XML Audio configuration files
 ifeq ($(USE_XML_AUDIO_POLICY_CONF), 1)
 PRODUCT_COPY_FILES += \
     $(PLATFORM_PATH)/configs/audio/audio_effects.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_effects.xml \
-    $(AUDIO_CONFIG_PATH)/msm8916_32/audio_policy_configuration.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_policy_configuration.xml \
+    $(PLATFORM_PATH)/configs/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/a2dp_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/default_volume_tables.xml \
@@ -102,8 +95,9 @@ TARGET_PROVIDES_CAMERA_HAL := true
 TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USES_QTI_CAMERA_DEVICE := true
 TARGET_USES_NON_TREBLE_CAMERA := true
-USE_DEVICE_SPECIFIC_CAMERA := true
+#USE_DEVICE_SPECIFIC_CAMERA := true
 
+    
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_SHOW_PERCENTAGE := true
@@ -115,17 +109,15 @@ JAVA_SOURCE_OVERLAYS += \
 	org.lineageos.hardware|$(VENDOR_PATH)/lineagehw|**/*.java
 	
 # Display
-MAX_EGL_CACHE_KEY_SIZE := 12*1024
-MAX_EGL_CACHE_SIZE := 2048*1024
-NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
-TARGET_FORCE_HWC_FOR_VIRTUAL_DISPLAYS := true
+#MAX_EGL_CACHE_KEY_SIZE := 12*1024
+#MAX_EGL_CACHE_SIZE := 2048*1024
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 MAX_VIRTUAL_DISPLAY_DIMENSION := 2048
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x02000000U
 TARGET_CONTINUOUS_SPLASH_ENABLED := true
 TARGET_HAVE_NEW_GRALLOC := true
 TARGET_USES_GRALLOC1 := true
-TARGET_USES_NEW_ION_API := true
+#TARGET_USES_NEW_ION_API := true
 
 # Encryption
 TARGET_LEGACY_HW_DISK_ENCRYPTION := true
@@ -148,9 +140,9 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
 # FM
-#AUDIO_FEATURE_ENABLED_FM := true
-#BOARD_HAVE_QCOM_FM := true
-#AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
+AUDIO_FEATURE_ENABLED_FM := true
+BOARD_HAVE_QCOM_FM := true
+AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
 
 # GPS
 TARGET_NO_RPC := true
@@ -184,7 +176,6 @@ TARGET_KERNEL_CONFIG := msm8916_sec_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := selinux_defconfig
 TARGET_KERNEL_SELINUX_LOG_CONFIG := selinux_log_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/msm8916
-#TARGET_KERNEL_USE_CLANG := true
 
 # Kernel - Toolchain
 ifneq ($(wildcard $(BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/arm/arm-eabi-7.2/bin),)
@@ -221,10 +212,9 @@ TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
     /vendor/bin/hw/rild=27
 
 # Power
-TARGET_HAS_LEGACY_POWER_STATS := true
-TARGET_HAS_NO_POWER_STATS := true
-TARGET_HAS_NO_WLAN_STATS := true
-TARGET_USES_INTERACTION_BOOST := true
+TARGET_POWERHAL_VARIANT := qcom
+CM_POWERHAL_EXTENSION := qcom
+WITH_QC_PERF := true
 
 # Protobuf
 PROTOBUF_SUPPORTED := true
@@ -257,13 +247,18 @@ TW_HAS_DOWNLOAD_MODE := true
 TW_HAS_MTP := true
 TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_NTFS_3G := true
+TW_USE_TOOLBOX := true
 TW_INPUT_BLACKLIST := "accelerometer\x0ahbtp_vm"
 TW_INTERNAL_STORAGE_PATH := "/data/media/0"
 TW_MAX_BRIGHTNESS := 255
 TW_MTP_DEVICE := /dev/mtp_usb
 TW_NEW_ION_HEAP := true
 TW_NO_REBOOT_BOOTLOADER := true
+TW_NO_SCREEN_TIMEOUT := true
+TW_EXCLUDE_SUPERSU := true
+TWRP_INCLUDE_LOGCAT := true
 TW_NO_USB_STORAGE := true
+#TARGET_RECOVERY_FSTAB := $(PLATFORM_PATH)/recovery/twrp.fstab
 TW_TARGET_USES_QCOM_BSP := false
 TW_THEME := portrait_hdpi
 
@@ -272,22 +267,19 @@ ifeq ($(RECOVERY_VARIANT),twrp)
 endif
 
 # SELinux
- include device/qcom/sepolicy-legacy/sepolicy.mk
+#include device/qcom/sepolicy-legacy-um/sepolicy.mk
 
- #BOARD_SEPOLICY_DIRS += \
- #    $(PLATFORM_PATH)/sepolicy
 
 # Shims
 TARGET_LD_SHIM_LIBS := \
     /system/lib/libui.so|libui_shim.so \
-    /system/lib64/libui.so|libui_shim.so \
-    /vendor/lib/libmmjpeg_interface.so|libboringssl-compat.so \
-    /vendor/lib/libsec-ril.so|libshim_secril.so \
-    /vendor/lib/libsec-ril-dsds.so|libshim_secril.so \
-    /vendor/lib/hw/camera.vendor.msm8916.so|libcamera_shim.so \
-    /vendor/lib/libizat_core.so|libshim_gps.so \
-    /vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so
-
+    /system/lib/libmmjpeg_interface.so|libboringssl-compat.so \
+    /system/lib/libsec-ril.so|libshim_secril.so \
+    /system/lib/libsec-ril-dsds.so|libshim_secril.so \
+    /system/lib/hw/camera.vendor.msm8916.so|libcamera_shim.so \
+    /system/vendor/lib/libizat_core.so|libshim_gps.so \
+    /system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so
+    
 # Snapdragon LLVM
 TARGET_USE_SDCLANG := true
 
