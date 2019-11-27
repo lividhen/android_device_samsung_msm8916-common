@@ -73,7 +73,6 @@ endif
 TARGET_USES_64_BIT_BINDER := true
 
 # Bluetooth
-
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
 QCOM_BT_USE_BTNV := true
@@ -95,7 +94,7 @@ TARGET_PROVIDES_CAMERA_HAL := true
 TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USES_QTI_CAMERA_DEVICE := true
 TARGET_USES_NON_TREBLE_CAMERA := true
-#USE_DEVICE_SPECIFIC_CAMERA := true
+USE_DEVICE_SPECIFIC_CAMERA := true
 
     
 # Charger
@@ -104,13 +103,13 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 
 # CMHW
-JAVA_SOURCE_OVERLAYS += \
-	org.lineageos.hardware|hardware/samsung/lineagehw|**/*.java \
-	org.lineageos.hardware|$(VENDOR_PATH)/lineagehw|**/*.java
+#JAVA_SOURCE_OVERLAYS += \
+#	org.lineageos.hardware|hardware/samsung/lineagehw|**/*.java \
+#	org.lineageos.hardware|$(VENDOR_PATH)/lineagehw|**/*.java
 	
 # Display
-#MAX_EGL_CACHE_KEY_SIZE := 12*1024
-#MAX_EGL_CACHE_SIZE := 2048*1024
+MAX_EGL_CACHE_KEY_SIZE := 12*1024
+MAX_EGL_CACHE_SIZE := 2048*1024
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 MAX_VIRTUAL_DISPLAY_DIMENSION := 2048
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x02000000U
